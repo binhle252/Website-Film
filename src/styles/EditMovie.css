@@ -129,3 +129,46 @@
     outline: none;
     box-shadow: 0 0 5px rgba(232, 65, 24, 0.5);
 }
+
+.genre-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.genre-button {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.genre-button:hover {
+  background-color: #d0eaff;
+  border-color: #0099ff;
+}
+
+.genre-button.selected {
+  background-color: #0099ff;
+  color: white;
+  border-color: #007acc;
+}
+
+.selected-genres {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.selected-tag {
+  background-color: #007acc;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 13px;
+}

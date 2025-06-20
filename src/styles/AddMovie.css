@@ -16,3 +16,58 @@
     margin-bottom: 20px;
     font-weight: bold;
 }
+
+/* Container của danh mục đã chọn */
+.add-movie-selected-categories {
+  margin: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Tag thể loại đã chọn */
+.add-movie-category-tag {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Nút xóa trong tag */
+.add-movie-category-tag button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Gợi ý danh mục thể loại */
+.add-movie-suggested-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* Nút danh mục gợi ý */
+.add-movie-category-suggestion {
+  padding: 6px 12px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.add-movie-category-suggestion:hover {
+  background-color: #007bff;
+  color: white;
+}

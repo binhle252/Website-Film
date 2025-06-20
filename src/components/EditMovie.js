@@ -8,7 +8,7 @@ function EditMovie() {
   const navigate = useNavigate();
   const [movie, setMovie] = useState({
     title: "",
-    genre: "",
+    genre: [],
     release_year: "",
     duration: "",
     status: "",
@@ -18,6 +18,16 @@ function EditMovie() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [allGenres, setAllGenres] = useState([]);
+
+useEffect(() => {
+  axios.get("http://localhost:3001/api/categories")
+    .then((res) => {
+      const names = res.data.map((item) => item.category_name);
+      setAllGenres(names);
+    })
+    .catch((err) => console.error("Lỗi lấy danh mục:", err));
+}, []);
 
   // Lấy thông tin phim
   useEffect(() => {
@@ -26,9 +36,12 @@ function EditMovie() {
       .then((res) => {
         const data = res.data;
         console.log("Dữ liệu API trả về:", data); // In ra để kiểm tra
-        const genres = Array.isArray(data.genre)
-          ? data.genre.join(", ")
-          : data.genre || "";
+        const genres = typeof data.genre === "string"
+  ? data.genre.split(",").map(g => g.trim())
+  : Array.isArray(data.genre)
+    ? data.genre
+    : [];
+
         setMovie({
           title: data.title || "",
           genre: genres,
@@ -78,8 +91,15 @@ function EditMovie() {
   // Cập nhật thông tin phim
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const movieToSend = {
+    ...movie,
+    genre: movie.genre.join(",")  // 🔥 Chuyển mảng genre thành chuỗi
+  };
+
+
     axios
-      .put(`http://localhost:3001/api/movies/${movieId}`, movie)
+      .put(`http://localhost:3001/api/movies/${movieId}`, movieToSend)
       .then(() => {
         alert("Cập nhật thành công!");
         navigate(-1);
@@ -138,16 +158,32 @@ function EditMovie() {
               required
             />
           </div>
-          <div className="form-movie">
-            <label htmlFor="genre">Thể loại:</label>
-            <input
-              type="text"
-              id="genre"
-              name="genre"
-              value={movie.genre}
-              onChange={handleChange}
-            />
-          </div>
+<div className="form-movie">
+  <label>Thể loại:</label>
+  <div className="genre-suggestions">
+    {allGenres.map((genreName) => (
+      <button
+        type="button"
+        key={genreName}
+        className={`genre-button ${movie.genre.includes(genreName) ? "selected" : ""}`}
+        onClick={() => {
+          const alreadySelected = movie.genre.includes(genreName);
+          const newGenres = alreadySelected
+            ? movie.genre.filter((g) => g !== genreName)
+            : [...movie.genre, genreName];
+          setMovie({ ...movie, genre: newGenres });
+        }}
+      >
+        {genreName}
+      </button>
+    ))}
+  </div>
+  <div className="selected-genres">
+    {movie.genre.map((g) => (
+      <span key={g} className="selected-tag">{g}</span>
+    ))}
+  </div>
+</div>
           <div className="form-movie">
             <label htmlFor="release_year">Năm phát hành:</label>
             <input

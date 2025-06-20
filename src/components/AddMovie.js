@@ -1,12 +1,12 @@
 import axios from "axios";
 import "../styles/AddMovie.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AddMovie() {
   const [formData, setFormData] = useState({
     title: "",
-    genre: "",
+    genre: [],
     release_year: "",
     duration: "",
     description: "",
@@ -14,6 +14,25 @@ function AddMovie() {
     background_url: "",
     status: "Pending",
   });
+  const [availableCategories, setAvailableCategories] = useState([]);
+  useEffect(() => {
+  axios.get("http://localhost:3001/api/categories")
+    .then((res) => setAvailableCategories(res.data))
+    .catch((err) => console.error("Lỗi khi lấy danh mục:", err));
+}, []);
+
+const handleAddCategory = (name) => {
+  if (!formData.genre.includes(name)) {
+    setFormData({ ...formData, genre: [...formData.genre, name] });
+  }
+};
+
+const handleRemoveCategory = (name) => {
+  setFormData({
+    ...formData,
+    genre: formData.genre.filter((g) => g !== name),
+  });
+};
 
   const navigate = useNavigate();
   // Hàm xử lý thay đổi giá trị của input
@@ -56,7 +75,7 @@ function AddMovie() {
       description: formData.description,
       release_year: parseInt(formData.release_year, 10),
       duration: parseInt(formData.duration, 10),
-      genre: formData.genre,
+      genre: formData.genre.join(","),
       image_url: formData.image_url,
       background_url: formData.background_url,
       status: formData.status,
@@ -124,16 +143,31 @@ function AddMovie() {
           />
         </div>
         <div className="form-movie">
-          <label>Thể loại:</label>
-          <input
-            type="text"
-            id="genre"
-            name="genre"
-            value={formData.genre}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+  <label>Danh mục thể loại:</label>
+  
+  {/* Hiển thị các danh mục đã chọn */}
+<div className="add-movie-selected-categories">
+  {formData.genre.map((g, idx) => (
+    <span key={idx} className="add-movie-category-tag">
+      {g}
+      <button type="button" onClick={() => handleRemoveCategory(g)}>×</button>
+    </span>
+  ))}
+</div>
+
+<div className="add-movie-suggested-categories">
+  {availableCategories.map((cat) => (
+    <button
+      type="button"
+      key={cat.category_id}
+      className="add-movie-category-suggestion"
+      onClick={() => handleAddCategory(cat.category_name)}
+    >
+      {cat.category_name}
+    </button>
+  ))}
+</div>  {/* 👈 thiếu thẻ đóng */}
+</div>
         <div className="form-movie">
           <label>Năm phát hành:</label>
           <input
